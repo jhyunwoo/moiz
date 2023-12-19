@@ -61,16 +61,25 @@ model VerificationToken {
 model Quiz {
   id        String     @id @default(cuid())
   title     String
+  isOpen   Boolean    @default(false)
   questions Question[]
 }
 
 model Question {
   id       String    @id @default(cuid())
   question String
+  image    String?
+  state QuizState @default(CLOSE)
   answer   String
   Quiz     Quiz?     @relation(fields: [quizId], references: [id])
   quizId   String?
   Answers  Answers[]
+}
+
+enum QuizState {
+  CLOSE 
+  CHECKANSWER
+  OPEN
 }
 
 model Answers {
