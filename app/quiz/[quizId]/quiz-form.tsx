@@ -1,11 +1,13 @@
 "use client"
 
 import { api } from "@/lib/api"
+import { loadingState } from "@/lib/recoil"
 import useQuestion from "@/lib/use-question"
 import useQuizPoint from "@/lib/use-quiz-point"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
+import { useSetRecoilState } from "recoil"
 
 interface Inputs {
   answer: string
@@ -19,7 +21,7 @@ export default function QuizForm({ quizId }: { quizId: string }) {
     answer: string
   }>()
 
-  console.log(question)
+  const setLoading = useSetRecoilState(loadingState)
 
   const {
     register,
@@ -27,7 +29,9 @@ export default function QuizForm({ quizId }: { quizId: string }) {
     setValue,
     formState: { errors },
   } = useForm<Inputs>()
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setLoading(true)
     const checkAnswer = await api<{
       result: string
       data: { point: number; answer: string }
@@ -41,6 +45,7 @@ export default function QuizForm({ quizId }: { quizId: string }) {
     } else {
       setResult({ point: 0, answer: checkAnswer.data.answer })
     }
+    setLoading(false)
   }
 
   useEffect(() => {

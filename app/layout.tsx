@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import AuthPorvider from "@/components/auth-provider"
+import RecoilProvider from "@/components/recoil-provider"
+import Loading from "@/components/loading"
 
 export const metadata: Metadata = {
   title: "모이즈",
@@ -15,7 +17,12 @@ export default function RootLayout({
   return (
     <html lang="ko" className="bg-slate-50">
       <body>
-        <AuthPorvider>{children}</AuthPorvider>
+        <AuthPorvider>
+          <RecoilProvider>
+            {children}
+            <Loading />
+          </RecoilProvider>
+        </AuthPorvider>
       </body>
     </html>
   )
