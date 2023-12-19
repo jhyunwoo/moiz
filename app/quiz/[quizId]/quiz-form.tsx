@@ -4,6 +4,7 @@ import { api } from "@/lib/api"
 import { loadingState } from "@/lib/recoil"
 import useQuestion from "@/lib/use-question"
 import useQuizPoint from "@/lib/use-quiz-point"
+import useRanking from "@/lib/use-ranking"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
@@ -20,6 +21,7 @@ export default function QuizForm({ quizId }: { quizId: string }) {
     point: number
     answer: string
   }>()
+  const { ranking } = useRanking(quizId)
 
   const setLoading = useSetRecoilState(loadingState)
 
@@ -103,10 +105,20 @@ export default function QuizForm({ quizId }: { quizId: string }) {
       )}
 
       {question?.state === "ANSWER" && (
-        <div>
-          <div>정답: {result?.answer}</div>
-          <div>{result?.point}점 추가</div>
-          <div>총 {quizPoint}점</div>
+        <div className="flex w-full max-w-xl flex-col rounded-lg bg-white p-4 font-semibold shadow-lg">
+          <div className="text-xl">정답: {result?.answer}</div>
+          <div className="pt-1 text-lg text-purple-600">
+            {result?.point ? result?.point + "점 추가" : ""}
+          </div>
+          <div className="text-xl">총 {quizPoint}점</div>
+          <div className="mt-4 rounded-md bg-slate-50 p-2">
+            <div>랭킹</div>
+            {ranking?.map((data, index) => (
+              <div key={data.id}>
+                {index + 1}. {data.User.nickname} {data.point}점
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
