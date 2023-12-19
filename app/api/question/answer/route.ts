@@ -54,7 +54,7 @@ export async function PUT(request: Request) {
       userId: session.user.id,
       questionId: questionId,
       result: result,
-      point: 330 - countRightAnswers,
+      point: result ? 330 - countRightAnswers : 0,
     },
   })
 
