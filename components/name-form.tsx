@@ -19,16 +19,18 @@ export default function NameForm() {
     formState: { errors },
   } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const updateNickname = await api("/api/nickname", {
+    const updateNickname = await api<{ result: string }>("/api/nickname", {
       method: "PUT",
       body: JSON.stringify({ nickname: data.name }),
     })
-    setNickname(false)
+    if (updateNickname.result === "SUCCESS") {
+      setNickname(false)
+    }
   }
 
   return (
     <div
-      className={`fixed top-0 flex h-screen w-full items-center justify-center bg-slate-50  p-4 ${
+      className={`fixed top-0 z-10 flex h-screen w-full items-center justify-center bg-slate-50 p-4 ${
         nickname ? "" : "hidden"
       }`}
     >
@@ -41,7 +43,6 @@ export default function NameForm() {
           <div className="flex w-full justify-between">
             <input
               {...register("name", { required: true })}
-              defaultValue={session?.user.nickname}
               className="w-full px-1 outline-none"
             />
             <button

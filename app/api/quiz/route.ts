@@ -14,15 +14,21 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const id = searchParams.get("quizId")
 
-  const question = await prisma.question.findFirst({
+  const question = await prisma.question.findMany({
     where: {
       quizId: id ? id : "",
-      state: "OPEN",
+      OR: [{ state: "OPEN" }, { state: "WATING" }, { state: "ANSWER" }],
     },
     select: {
       image: true,
       question: true,
+      state: true,
+      id: true,
     },
   })
-  return NextResponse.json({ result: "SUCESS", data: question })
+
+  return NextResponse.json({
+    result: "SUCESS",
+    data: question[question.length - 1],
+  })
 }

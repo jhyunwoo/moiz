@@ -10,7 +10,7 @@ export default async function Quiz({ params }: { params: { quizId: string } }) {
   })
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex h-screen w-full flex-col">
       <NameForm />
       <div className="bg-purple-500 p-4 text-lg font-semibold text-white">
         {quiz?.title}

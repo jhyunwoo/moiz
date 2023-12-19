@@ -38,16 +38,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  nickname String? @unique
-  point Int @default(0)
-  email         String?   @unique
+  nickname      String?      @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   Answers       Answers[]
+  results       QuizResult[]
 }
 
 model VerificationToken {
@@ -59,17 +59,27 @@ model VerificationToken {
 }
 
 model Quiz {
-  id        String     @id @default(cuid())
-  title     String
-  isOpen   Boolean    @default(false)
-  questions Question[]
+  id         String       @id @default(cuid())
+  title      String
+  isOpen     Boolean      @default(false)
+  questions  Question[]
+  QuizResult QuizResult[]
+}
+
+model QuizResult {
+  id     String  @id @default(cuid())
+  point  Int     @default(0)
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+  quiz   Quiz    @relation(fields: [quizId], references: [id])
+  quizId String
 }
 
 model Question {
   id       String    @id @default(cuid())
   question String
   image    String?
-  state QuizState @default(CLOSE)
+  state    QuizState @default(CLOSE)
   answer   String
   Quiz     Quiz?     @relation(fields: [quizId], references: [id])
   quizId   String?
@@ -77,15 +87,17 @@ model Question {
 }
 
 enum QuizState {
-  CLOSE 
-  CHECKANSWER
+  CLOSE
+  WATING
   OPEN
+  ANSWER
 }
 
 model Answers {
   id         String   @id @default(cuid())
   userAnswer String
-  result Boolean
+  result     Boolean
+  point      Int      @default(0)
   user       User     @relation(fields: [userId], references: [id])
   userId     String
   question   Question @relation(fields: [questionId], references: [id])

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 
 export async function PUT(request: Request) {
   const session = await getServerSession(authOptions)
-  if (!session)
+  if (!session?.user.id)
     return NextResponse.json(
       { result: "ACCESS DENIED", data: null },
       { status: 401 }
@@ -24,17 +24,55 @@ export async function PUT(request: Request) {
     },
   })
 
-  if (questionAnswer?.answer.replace(" ", "") === answer.replace(" ", "")) {
-    const addPoint = await prisma.user.update({
-      where: {
-        id: session.user.id,
-      },
+  const checkDoubleAnswer = await prisma.answers.findFirst({
+    where: {
+      userId: session.user.id,
+      questionId: questionId,
+    },
+  })
+
+  if (checkDoubleAnswer) {
+    return NextResponse.json({
+      result: "ALREADY SUBMITED",
+      data: { point: checkDoubleAnswer.point, answer: questionAnswer?.answer },
+    })
+  }
+
+  const result =
+    questionAnswer?.answer.replace(" ", "") === answer.replace(" ", "")
+
+  const countRightAnswers = await prisma.answers.count({
+    where: {
+      questionId: questionId,
+      result: true,
+    },
+  })
+
+  const createAnswer = await prisma.answers.create({
+    data: {
+      userAnswer: answer,
+      userId: session.user.id,
+      questionId: questionId,
+      result: result,
+      point: 330 - countRightAnswers,
+    },
+  })
+
+  if (result) {
+    return NextResponse.json({
+      result: "SUCCESS",
       data: {
-        point: {
-          increment: 1,
-        },
+        point: 330 - countRightAnswers,
+        answer: questionAnswer.answer,
       },
     })
-    return NextResponse.json({ result: "SUCCESS", data: true })
+  } else {
+    return NextResponse.json({
+      result: "SUCCESS",
+      data: {
+        point: 0,
+        answer: questionAnswer?.answer,
+      },
+    })
   }
 }
