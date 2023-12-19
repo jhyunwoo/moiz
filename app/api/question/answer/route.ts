@@ -38,8 +38,14 @@ export async function PUT(request: Request) {
     })
   }
 
+  function nomalizeString(str: string) {
+    let reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim
+    return str.replace(reg, "")
+  }
+
   const result =
-    questionAnswer?.answer.replace(" ", "") === answer.replace(" ", "")
+    nomalizeString(questionAnswer?.answer ? questionAnswer.answer : "") ===
+    nomalizeString(answer)
 
   const countRightAnswers = await prisma.answers.count({
     where: {
@@ -63,7 +69,7 @@ export async function PUT(request: Request) {
       result: "SUCCESS",
       data: {
         point: 330 - countRightAnswers,
-        answer: questionAnswer.answer,
+        answer: questionAnswer?.answer,
       },
     })
   } else {

@@ -121,6 +121,11 @@ export default function QuizForm({ quizId }: { quizId: string }) {
           </div>
         </div>
       )}
+      {!question && (
+        <div className="text-lg font-semibold">
+          퀴즈 시작 전까지 잠시만 기다려주세요.
+        </div>
+      )}
     </div>
   )
 }
