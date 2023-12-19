@@ -14,7 +14,7 @@ export default function useRanking(quizId: string) {
         nickname: string
       }
     }[]
-  }>(`/api/ranking?quizId=${quizId}`, fetcher)
+  }>(`/api/ranking?quizId=${quizId}`, fetcher, { refreshInterval: 1000 })
 
   return {
     ranking: data?.data,
