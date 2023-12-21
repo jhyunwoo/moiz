@@ -107,9 +107,18 @@ export default function QuizForm({ quizId }: { quizId: string }) {
 
       {question?.state === "ANSWER" && (
         <div className="flex w-full max-w-xl flex-col rounded-lg bg-white p-4 font-semibold shadow-lg">
-          <div className="text-xl">정답: {result?.answer}</div>
+          <div className="text-xl">
+            정답:{" "}
+            {result?.answer ? (
+              result?.answer
+            ) : (
+              <span className="text-sm text-slate-700">
+                답안을 제출하지 않은 경우 정답이 표시되지 않습니다.
+              </span>
+            )}
+          </div>
           <div className="pt-1 text-lg text-purple-600">
-            {result?.point + "점 추가"}
+            {result?.point ? result?.point : 0} 점 추가
           </div>
           <div className="text-xl">총 {quizPoint}점</div>
           <div className="mt-4 rounded-md bg-slate-50 p-2">
