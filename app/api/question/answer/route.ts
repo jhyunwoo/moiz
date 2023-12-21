@@ -54,13 +54,13 @@ export async function PUT(request: Request) {
     },
   })
 
-  const createAnswer = await prisma.answers.create({
+  await prisma.answers.create({
     data: {
       userAnswer: answer,
       userId: session.user.id,
       questionId: questionId,
       result: result,
-      point: result ? 330 - countRightAnswers : 0,
+      point: result ? 300 - countRightAnswers : 0,
     },
   })
 
@@ -68,7 +68,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({
       result: "SUCCESS",
       data: {
-        point: 330 - countRightAnswers,
+        point: 300 - countRightAnswers,
         answer: questionAnswer?.answer,
       },
     })
