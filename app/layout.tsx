@@ -5,8 +5,8 @@ import RecoilProvider from "@/components/recoil-provider"
 import Loading from "@/components/loading"
 
 export const metadata: Metadata = {
-  title: "모이즈",
-  description: "온라인 퀴즈 플랫폼",
+  title: "치즈 (치료제 퀴즈)",
+  description: "충남삼성고 온라인 퀴즈 플랫폼",
 }
 
 export default function RootLayout({

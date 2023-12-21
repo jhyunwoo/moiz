@@ -73,11 +73,12 @@ export default function QuizForm({ quizId }: { quizId: string }) {
           <div className="flex w-full items-center justify-center p-4">
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="flex w-full space-x-2"
+              className="flex w-full max-w-xl space-x-2"
             >
               <input
                 placeholder="정답을 입력해주세요."
-                className="w-full rounded-md p-2 outline-none ring-2 ring-purple-400 focus:ring-purple-500"
+                autoComplete="off"
+                className="w-full rounded-md p-2 outline-none ring-2 ring-purple-400 focus:ring-purple-500 "
                 {...register("answer", {
                   required: { value: true, message: "정답을 입력해주세요." },
                 })}
@@ -108,12 +109,12 @@ export default function QuizForm({ quizId }: { quizId: string }) {
         <div className="flex w-full max-w-xl flex-col rounded-lg bg-white p-4 font-semibold shadow-lg">
           <div className="text-xl">정답: {result?.answer}</div>
           <div className="pt-1 text-lg text-purple-600">
-            {result?.point ? result?.point + "점 추가" : ""}
+            {result?.point + "점 추가"}
           </div>
           <div className="text-xl">총 {quizPoint}점</div>
           <div className="mt-4 rounded-md bg-slate-50 p-2">
             <div>랭킹</div>
-            {ranking?.map((data, index) => (
+            {ranking?.map((data, index: number) => (
               <div key={data.id}>
                 {index + 1}. {data.User.nickname} {data.point}점
               </div>
